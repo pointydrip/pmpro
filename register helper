@@ -1,0 +1,83 @@
+<?php
+ 
+// We have to put everything in a function called on init, so we are sure Register Helper is loaded.
+function my_pmprorh_init() {
+	// Don't break if Register Helper is not loaded.
+	if ( ! function_exists( 'pmprorh_add_registration_field' ) ) {
+		return false;
+	}
+
+	// Define the fields.
+	$fields = array();
+	$fields[] = new PMProRH_Field(
+		'country2',							// input name, will also be used as meta key
+		'select',								// type of field
+		array(
+			'label'		=> 'Country',		// custom field label
+			'profile'	=> true,			// show in user profile
+			'required'	=> true,			// make this field required
+			'showrequired' => true,
+			'levels'		=> array(1,2,3,4,5)	// only levels 1 and 2 should have the company field
+			'options' => array(				// <option> elements for select field
+				''		=> '',			// blank option - cannot be selected if this field is required
+				'canada'	=> 'Canada',
+				'usa'		=> 'United States',	
+				'germany'	=> 'Germany',
+				'france'	=> 'France',	
+			)
+		)
+	);
+	$fields[] = new PMProRH_Field(
+		'title3',							// input name, will also be used as meta key
+		'text',								// type of field
+		array(
+			'label'		=> 'Title',	// custom field label
+			'size'		=> 40,				// input size
+			'profile'	=> true,
+			'required'	=> true,
+			'showrequired' => true,
+			'levels'		=> array(1,2,3,4,5)
+		)
+	);
+	$fields[] = new PMProRH_Field(
+		'freelance2',							// input name, will also be used as meta key
+		'checkbox',							// type of field
+		array(
+			'label' => 'Do you do freelance work?',
+			'profile'	=> true,
+			'required'	=> true,
+			'showrequired' => true,
+			'levels'		=> array(1,2,3,4,5)
+		)
+	);
+	$fields[] = new PMProRH_Field(
+		'format2',							// input name, will also be used as meta key
+		'select2',								// type of field
+		array(
+			'label'		=> 'Enter one or more keywords that summarize format of work you do.',		// custom field label
+			'options' => array(				// <option> elements for select field
+				''		=> '',				// blank option - cannot be selected if this field is required
+				'print'	=> 'Print',	
+				'radio'	=> 'Radio',
+				'video'	=> 'Video',
+				'other'	=> 'Other',
+			)
+			'profile'	=> true,			// show in user profile
+			'required'	=> true,			// make this field required
+			'showrequired' => true,
+			'levels'	=> array(1,2,3,4,5)	
+		)
+	);
+	// Add the fields into a new checkout_boxes are of the checkout page.
+	foreach ( $fields as $field ) {
+		pmprorh_add_registration_field(
+			'checkout_boxes',				// location on checkout page
+			$field							// PMProRH_Field object
+		);
+	}
+
+	// That's it. See the PMPro Register Helper readme for more information and examples.
+}
+add_action( 'init', 'my_pmprorh_init' );
+
+?>
