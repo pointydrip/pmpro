@@ -1,0 +1,11 @@
+/**
+* If a user is pending approval set to $level_id to 1 until aproved
+*
+*/
+
+apply_filters("pmpro_has_membership_level", $haslevel, $levels){
+
+  if(self::isPending($user_id, $level)) {
+           $level_id = 1;
+           }
+      }
