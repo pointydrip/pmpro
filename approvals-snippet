@@ -1,0 +1,37 @@
+/**
+   * Deny access to member content if user is not approved
+	 * Fires on pmpro_has_membership_access_filter
+	 */
+	public static function pmpro_has_membership_access_filter( $access, $post, $user, $levels ) {
+
+		//if we don't have access now, we still won't
+		if ( ! $access ) {
+			return $access;
+		}
+
+		//no user, this must be open to everyone
+		if ( empty( $user ) || empty( $user->ID ) ) {
+			return $access;
+		}
+
+		//no levels, must be open
+		if ( empty( $levels ) ) {
+			return $access;
+		}
+
+		// If the current user doesn't have a level, bail.
+		if ( ! pmpro_hasMembershipLevel() ) {
+			return $access;
+		}
+
+		//now we need to check if the user is approved for ANY of the $levels
+		$access = false;    //assume no access
+		foreach ( $levels as $level ) {
+			if ( self::isApproved( $user->ID, $level->id ) ) {
+				$access = true;
+				break;
+			}
+		}
+
+		return $access;
+	}
